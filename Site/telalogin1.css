@@ -1,0 +1,73 @@
+.login-form {
+	width: 25%;
+	margin: 50% auto;
+	color: #000B0D;
+	
+}
+.login-form form {
+	margin-bottom: 5%;
+	background: #1C8394;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	padding: 10%;
+	
+}
+.login-form h2 {
+	margin: 0 0 5%;
+	color: #000B0D;
+	
+}
+.form-control, .btn {
+	min-height: 38px;
+	border-radius: 2%;
+}
+.btn {        
+	font-size: 15px;
+	font-weight: bold;
+	color: #154B52 ;
+	background-color: #000B0D;
+
+}
+.header {
+display: flex;    
+flex-flow: column nowrap;
+justify-content: center;  
+align-items: center;
+
+
+}
+
+.pull-right {
+    padding-left: 5%;
+    padding-top: 20%;
+	color: #000B0D;
+}
+
+.body {
+ background: lightblue ;
+ position: relative;
+ margin-top: 50%;
+ color: black;
+    
+}
+.login-form{
+    position: relative;
+    margin-top: 1%;
+    color: #000B0D;
+	
+   
+}
+
+#botaohover:hover 
+
+{ color: #1C8394; 
+
+transition: 0.1s;
+
+opacity: 1;
+
+}
+.text-center{
+	color: #1C8394;
+}
+
+
