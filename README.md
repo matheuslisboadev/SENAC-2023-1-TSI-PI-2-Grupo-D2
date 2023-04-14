@@ -13,5 +13,5 @@
 | Data       | O que foi feito |
 |------------|-----------------|
 | 06/04/2023 | Criamos algumas wireframes
-| 13/04/2023 |
+| 13/04/2023 | Começamos a fazer as telas de cadastramento de produtos, listagem, gerenciamento, etc.
 | 20/04/2023 | 
