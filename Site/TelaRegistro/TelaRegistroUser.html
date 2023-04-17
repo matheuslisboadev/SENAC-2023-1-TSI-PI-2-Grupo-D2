@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Registro - Delta</title>
+    <link rel="stylesheet" href="TelaRegistro1.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+</head>
+<body>
+    <header>
+        <img src="Site/wireframe e imagens/deltalogo.png" alt="logo">
+    </header>
+    
+    <div class="registro-form">
+        <form action="/examples/actions/confirmation.php" method="post">
+            <h2 class="text-center">Cadastre-se</h2>       
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Nome" required="required">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Sobrenome" required="required">
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" required="required">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Senha" id="Senha" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Confirme Sua Senha" id="Senha_Confirme" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-block" id="botaohover">Cadastrar</button>
+            </div>
+            <div class="clearfix">
+                <label class="pull-left checkbox-inline"><input type="checkbox" required> Eu aceito as políticas de privacidade </label>
+                <a href="#" class="pull-right">Conheça as Politicas de privacidade aqui!</a>
+            </div>        
+        </form>
+        <p class="text-center"><a href="#">Já possui uma conta? Faça login</a></p>
+    
+</body>
+</html>
