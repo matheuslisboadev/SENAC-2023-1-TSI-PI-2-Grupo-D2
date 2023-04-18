@@ -69,3 +69,12 @@ opacity: 1;
 
 }
 
+#cabecalho {
+    text-align: center;
+  }
+  
+  #logo {
+    display: block;
+    margin: auto;
+  }
+  
