@@ -1,0 +1,43 @@
+    /*!-- Cores projeto: #1C8394  #154B52   #000B0D   #390D02   #A52502 --*/
+    .gradient-custom {
+    /* fallback for old browsers */
+    background: #f093fb;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to bottom right, #000B0D, #000B0D);
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to bottom right, #154B52, #154B52);
+    }
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+    }
+    .card-registration .select-arrow {
+    top: 13px;
+    }
+    #logoPI{
+        display: flex;
+        justify-content: center;
+}
+    .botao #botao{
+    background-color: #154B52;
+}
+
+.botao {
+    justify-content: center;
+    display: flex;
+}
+.botao #botao:hover {
+    transition: .8s;
+    opacity: .8;
+}
+#upload{
+    margin-top: 5%;
+    margin-bottom: 10%;
+}
+#firstName{
+    font-size: 1.1rem;
+}
