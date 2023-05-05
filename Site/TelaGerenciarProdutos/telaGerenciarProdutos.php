@@ -61,11 +61,11 @@
 							<?php
 							//Monta o comando de Inserção no Banco
 							$cmd = $pdo->query("SELECT P.PRODUTO_ID,P.PRODUTO_NOME,P.PRODUTO_DESC,P.PRODUTO_DESCONTO,P.PRODUTO_PRECO,P.PRODUTO_ATIVO,C.CATEGORIA_ID,C.CATEGORIA_NOME,C.CATEGORIA_ATIVO
-FROM PRODUTO P 
-INNER JOIN 
-CATEGORIA C ON P.CATEGORIA_ID = C.CATEGORIA_ID
-WHERE  PRODUTO_ATIVO=1
-ORDER BY PRODUTO_ID");
+							FROM PRODUTO P 
+							INNER JOIN 
+							CATEGORIA C ON P.CATEGORIA_ID = C.CATEGORIA_ID
+							WHERE  PRODUTO_ATIVO=1
+							ORDER BY PRODUTO_ID");
 							?>
 							<?php
 							while ($linha = $cmd->fetch()) {
@@ -155,24 +155,54 @@ ORDER BY PRODUTO_ID");
 					<div class="modal-body">
 						<div class="form-group">
 							<label>Nome do Produto</label>
-							<input type="text" class="form-control" required>
+							<input type="text" class="form-control" name="nomeProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Descrição do Produto</label>
-							<input type="text" class="form-control" required>
+							<input type="text" class="form-control" name="descProduto" required>
 						</div>
 						<div class="form-group">
-							<label>Categoria do Produto</label>
-							<textarea class="form-control" required></textarea>
+							<label>Preço do Produto</label>
+							<input type="text" class="form-control" name="precoProduto" required>
 						</div>
 						<div class="form-group">
-							<label>Quantidade do Produto</label>
-							<input type="number" class="form-control" required>
+							<label>Desconto do Produto</label>
+							<input type="text" class="form-control" name="descontoProduto" required>
+						</div>
+						<div class="form-group">
+								<label for="exampleInputEmail1">Categoria</label>
+								<div class="input-group mb-3">
+							<select class="custom-select" name="categoriaProd" id="inputGroupSelect01">
+								<option selected>Escolha...</option>
+								<?php
+								$cmd = $pdo->query("SELECT * FROM CATEGORIA WHERE CATEGORIA_ATIVO=1");
+								while($linha = $cmd->fetch()){?>
+								<option value="<?php echo $linha["CATEGORIA_ID"]?> " name = "categoriaID"><?php echo $linha["CATEGORIA_NOME"];
+								?>
+							<?php }?>
+										</option> 
+								</select>
+							</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="radio" name="produtoAtivo" value=true>Ativo 
+							</div>
+								<div class="input-group-text">
+									<input type="radio" name="produtoInativo" value=false>Não Ativo
+					   			</div>
 						</div>
 					</div>
+						<div class="form-group">
+							<label>Quantidade do Produto</label>
+							<input type="number" min = "1" max="999" class="form-control" name ="qntProduto" required>
+						</div>
+					</div>
+						<div class="form-group">
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-success" value="Add">
+						<input type="submit" class="btn btn-success" value="Enviar" name="Enviar">
 					</div>
 				</form>
 			</div>
@@ -190,19 +220,19 @@ ORDER BY PRODUTO_ID");
 					<div class="modal-body">
 						<div class="form-group">
 							<label>Nome do Produto</label>
-							<input type="text" class="form-control" required>
+							<input type="text" class="form-control" id="nomeDoProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Descrição do Produto</label>
-							<input type="text" class="form-control" required>
+							<input type="text" class="form-control"  id="descDoProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Categoria do Produto</label>
-							<textarea class="form-control" required></textarea>
+							<textarea class="form-control" id="categDoProduto" required></textarea>
 						</div>
 						<div class="form-group">
 							<label>Quantidade do Produto</label>
-							<input type="number" class="form-control" required>
+							<input type="number" class="form-control" id="qntDoProduto" required>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -235,5 +265,4 @@ ORDER BY PRODUTO_ID");
 		</div>
 	</div>
 </body>
-
 </html>
