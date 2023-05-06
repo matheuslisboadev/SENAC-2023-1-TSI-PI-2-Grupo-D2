@@ -199,7 +199,7 @@ body {
 		border-radius: 3px;
 	}
 	.modal .modal-footer {
-		background: #ecf0f1;
+		background: #FFFFFF;
 		border-radius: 0 0 3px 3px;
 	}
     .modal .modal-title {
@@ -221,8 +221,9 @@ body {
 		font-weight: normal;
 	}
 	#logoPi{
-
-
-			display: flex;
-			justify-content: center;
-	}	
+		display: flex;
+		justify-content: center;
+	}
+	img {
+		border-radius: 30px;
+	}
