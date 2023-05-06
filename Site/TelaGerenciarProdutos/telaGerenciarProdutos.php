@@ -10,18 +10,18 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="Css\cssTelaGerenciarProdutos.css" media="screen">
+	<link rel="stylesheet" type="text/css" href="Css/cssTelaGerenciarProdutos.css" media="screen">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="Js\jsTelaGerenciarProdutos.js"></script>
+	<script src="Js/jsTelaGerenciarProdutos.js"></script>
 	<?php include "ConectaMySQLDelta.php";
-	$pdo = conectaSQL();
+	$pdo = conectSQL();
 	?>
 </head>
 
 <body>
 	<div id="logoPi">
-		<img src="Imagens/logoPI.png" width="300px" height="125px">
+		<img src="Imagens/logoPI.png" width="300" height="125">
 	</div>
 	<div class="container">
 		<div class="table-responsive">
@@ -40,12 +40,6 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th>
-								<span class="custom-checkbox">
-									<input type="checkbox" id="selectAll">
-									<label for="selectAll"></label>
-								</span>
-							</th>
 							<th>ID do Produto</th>
 							<th>Nome do Produto</th>
 							<th>Descrição do Produto</th>
@@ -57,75 +51,66 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<?php
+						//Monta o comando de Inserção no Banco
+						$cmd = $pdo->query("SELECT P.PRODUTO_ID,P.PRODUTO_NOME,P.PRODUTO_DESC,P.PRODUTO_DESCONTO,P.PRODUTO_PRECO,P.PRODUTO_ATIVO,C.CATEGORIA_ID,C.CATEGORIA_NOME,C.CATEGORIA_ATIVO
+						FROM PRODUTO P 
+						INNER JOIN 
+						CATEGORIA C ON P.CATEGORIA_ID = C.CATEGORIA_ID
+						WHERE  PRODUTO_ATIVO=1
+						ORDER BY PRODUTO_ID");
+						?>
+						<?php
+						while ($linha = $cmd->fetch()) {
+						?>
+							<tr>
+								<td>
+									<?php
+									echo $linha["PRODUTO_ID"];
+									?>
+								</td>
+								<td>
+									<?php
+									echo $linha["PRODUTO_NOME"];
+									?>
+								</td>
+								<td>
+									<?php
+									echo $linha["PRODUTO_DESC"];
+									?>
+								</td>
+								<td>
+									<?php
+									echo "R$" . $linha["PRODUTO_PRECO"];
+									?>
+								</td>
+								<td>
+									<?php
+									echo "R$" . $linha["PRODUTO_DESCONTO"];
+									?>
+								</td>
+								<td>
+									<?php
+									echo ($linha["CATEGORIA_ID"]);
+									?>
+								</td>
+								<td>
+									<?php
+									if ($linha["PRODUTO_ATIVO"] == 00) {
+										echo "Produto inativo";
+									} else {
+										echo "Produto Ativo";
+									}
+									?>
+								</td>
+								<td>
+									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+								</td>
 							<?php
-							//Monta o comando de Inserção no Banco
-							$cmd = $pdo->query("SELECT P.PRODUTO_ID,P.PRODUTO_NOME,P.PRODUTO_DESC,P.PRODUTO_DESCONTO,P.PRODUTO_PRECO,P.PRODUTO_ATIVO,C.CATEGORIA_ID,C.CATEGORIA_NOME,C.CATEGORIA_ATIVO
-							FROM PRODUTO P 
-							INNER JOIN 
-							CATEGORIA C ON P.CATEGORIA_ID = C.CATEGORIA_ID
-							WHERE  PRODUTO_ATIVO=1
-							ORDER BY PRODUTO_ID");
+						}
 							?>
-							<?php
-							while ($linha = $cmd->fetch()) {
-							?>
-						<tr>
-							<td>
-								<span class="custom-checkbox">
-									<input type="checkbox" id="checkbox2" name="options[]" value="1">
-									<label for="checkbox2"></label>
-							</td>
-							<td>
-								<?php
-								echo $linha["PRODUTO_ID"];
-								?>
-							</td>
-							<td>
-								<?php
-								echo $linha["PRODUTO_NOME"];
-								?>
-							</td>
-							<td>
-								<?php
-								echo $linha["PRODUTO_DESC"];
-								?>
-							</td>
-							<td>
-								<?php
-								echo "R$" . $linha["PRODUTO_PRECO"];
-								?>
-							</td>
-							<td>
-								<?php
-								echo "R$" . $linha["PRODUTO_DESCONTO"];
-								?>
-							</td>
-							<td>
-								<?php
-								echo ($linha["CATEGORIA_ID"]);
-								?>
-							</td>
-							<td>
-								<?php
-								if ($linha["PRODUTO_ATIVO"] == 00) {
-									echo "Produto inativo";
-								} else {
-									echo "Produto Ativo";
-								}
-								?>
-							</td>
-							<td>
-								<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-								<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-							</td>
-							<td>
-							<?php
-							}
-							?>
-							</td>
-						</tr>
-						</tr>
+							</tr>
 					</tbody>
 				</table>
 				<div class="clearfix">
@@ -147,7 +132,7 @@
 	<div id="addEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form>
+				<form method="POST" action="InsertProdutos.php">
 					<div class="modal-header">
 						<h4 class="modal-title">Adicionar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -163,46 +148,78 @@
 						</div>
 						<div class="form-group">
 							<label>Preço do Produto</label>
-							<input type="text" class="form-control" name="precoProduto" required>
+							<input type="number" min="1" max="999" class="form-control" name="precoProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Desconto do Produto</label>
-							<input type="text" class="form-control" name="descontoProduto" required>
+							<input type="number" min="1" max="999" class="form-control" name="descontoProduto" required>
 						</div>
 						<div class="form-group">
-								<label for="exampleInputEmail1">Categoria</label>
-								<div class="input-group mb-3">
-							<select class="custom-select" name="categoriaProd" id="inputGroupSelect01">
-								<option selected>Escolha...</option>
-								<?php
-								$cmd = $pdo->query("SELECT * FROM CATEGORIA WHERE CATEGORIA_ATIVO=1");
-								while($linha = $cmd->fetch()){?>
-								<option value="<?php echo $linha["CATEGORIA_ID"]?> " name = "categoriaID"><?php echo $linha["CATEGORIA_NOME"];
-								?>
-							<?php }?>
-										</option> 
+							<label for="exampleInputEmail1">Categoria</label>
+							<div class="input-group mb-3">
+								<select class="custom-select" name="categoriaProd" id="inputGroupSelect01">
+									<option selected>Escolha...</option>
+									<?php
+									$cmd = $pdo->query("SELECT * FROM CATEGORIA WHERE CATEGORIA_ATIVO=1");
+									while ($linha = $cmd->fetch()) { ?>
+										<option value="<?php echo $linha["CATEGORIA_ID"] ?>" name="categoriaID">
+											<?php echo $linha["CATEGORIA_ID"] . " - " . $linha["CATEGORIA_NOME"]; ?>
+										</option>
+									<?php } ?>
 								</select>
 							</div>
-					</div>
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<div class="input-group-text">
-								<input type="radio" name="produtoAtivo" value=true>Ativo 
-							</div>
-								<div class="input-group-text">
-									<input type="radio" name="produtoInativo" value=false>Não Ativo
-					   			</div>
 						</div>
-					</div>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="radio" name="produtoAtivo" value=true> Ativo
+								</div>
+								<div class="input-group-text">
+									<input type="radio" name="produtoInativo" value=false> Não Ativo
+								</div>
+							</div>
+						</div>
+						<br>
 						<div class="form-group">
 							<label>Quantidade do Produto</label>
-							<input type="number" min = "1" max="999" class="form-control" name ="qntProduto" required>
+							<input type="number" min="1" max="999" class="form-control" name="qntProduto" required>
 						</div>
-					</div>
 						<div class="form-group">
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-success" value="Enviar" name="Enviar">
+							<div class="modal-footer">
+								<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+								<input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="botaoEnviar">
+								<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+								<script>
+									$(document).ready(function() {
+										// Seleciona o botão pelo ID
+										var botao = $("#botaoEnviar");
+										// Adiciona um ouvinte de evento de clique ao botão
+										botao.click(function() {
+											// Aqui você pode colocar sua lógica de consulta
+											// Por exemplo, você pode usar uma biblioteca AJAX para enviar uma solicitação ao servidor
+
+											// Exemplo usando AJAX com jQuery
+											$.ajax({
+												url: "InsertProdutos.php",
+												method: "POST",
+												data: {
+													parametro1: valor1,
+													parametro2: valor2
+												}, // Seus parâmetros de consulta
+												success: function(response) {
+													// Manipule a resposta do servidor aqui
+													console.log(response);
+												},
+												error: function(xhr, status, error) {
+													// Manipule os erros aqui
+													console.error(error);
+												}
+											});
+										});
+									});
+								</script>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -212,7 +229,7 @@
 	<div id="editEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form>
+				<form method="POST" action="EditProdutos.php">
 					<div class="modal-header">
 						<h4 class="modal-title">Editar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -224,7 +241,7 @@
 						</div>
 						<div class="form-group">
 							<label>Descrição do Produto</label>
-							<input type="text" class="form-control"  id="descDoProduto" required>
+							<input type="text" class="form-control" id="descDoProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Categoria do Produto</label>
@@ -247,7 +264,7 @@
 	<div id="deleteEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form>
+				<form method="POST" action="DeleteProdutos.php">
 					<div class="modal-header">
 						<h4 class="modal-title">Deletar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -265,4 +282,5 @@
 		</div>
 	</div>
 </body>
+
 </html>
