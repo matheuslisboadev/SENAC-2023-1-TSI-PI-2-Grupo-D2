@@ -32,8 +32,8 @@
 							<h2>Gerenciar <b>Produtos Delta</b></h2>
 						</div>
 						<div class="col-xs-6">
-							<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Adicionar Produto</span></a>
-							<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Deletar Produto</span></a>
+							<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i
+									class="material-icons">&#xE147;</i> <span>Adicionar Produto</span></a>
 						</div>
 					</div>
 				</div>
@@ -47,7 +47,7 @@
 							<th>Preço do Produto</th>
 							<th>Desconto do Produto</th>
 							<th>Categoria ID</th>
-							<th>Produto Ativo</th>
+							<th>Status do Produto</th>
 							<th>Editar/Inativar Produto</th>
 						</tr>
 					</thead>
@@ -65,9 +65,10 @@
 						WHERE  PRODUTO_ATIVO=1
 						ORDER BY PRODUTO_ID");
 						?>
+						<?php $resultado = $cmd -> fetchAll(); ?>
 						<?php
-						while ($linha = $cmd->fetch()) {
-						?>
+						foreach ($resultado as $linha) {
+							?>
 							<tr>
 								<td>
 									<?php
@@ -114,13 +115,14 @@
 									?>
 								</td>
 								<td>
-									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
-									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Inativar">&#xE872;</i></a>
+									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
+											data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+											<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Inativar">&#xE872;</i></a>
 								</td>
-							<?php
+								</tr>
+								<?php
 						}
-							?>
-							</tr>
+						?>
 					</tbody>
 				</table>
 
@@ -160,9 +162,9 @@
 									<option selected>Escolha...</option>
 									<?php
 									$cmd = $pdo->query("SELECT * FROM CATEGORIA WHERE CATEGORIA_ATIVO=1");
-									while ($linha = $cmd->fetch()) { ?>
-										<option value="<?php echo $linha["CATEGORIA_ID"] ?>">
-											<?php echo $linha["CATEGORIA_ID"] . " - " . $linha["CATEGORIA_NOME"]; ?>
+									while ($linhaCategoria = $cmd->fetch()) { ?>
+										<option value="<?php echo $linhaCategoria["CATEGORIA_ID"] ?>">
+											<?php echo $linhaCategoria["CATEGORIA_ID"] . " - " . $linhaCategoria["CATEGORIA_NOME"]; ?>
 										</option>
 									<?php } ?>
 								</select>
@@ -186,7 +188,8 @@
 						<div class="form-group">
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-								<button type="submit" class="btn btn-success" id="botaoEnviar" onclick="enviar();">Enviar</button>
+								<button type="submit" class="btn btn-success" id="botaoEnviar"
+									onclick="enviar();">Enviar</button>
 								<script>
 									function enviar() {
 										document.getElementById("form-inserir").submit();
@@ -238,8 +241,8 @@
 	<div id="deleteEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form method="POST" action="InativarProdutos.php">
-					<input type="hidden" value="<?= $linha["ID_PRODUTO"] ?>" name="idProduto">
+				<form method="POST" action="InativarProdutos.php" id="formInativar">
+				<input type="hidden" value="<?= $linha["PRODUTO_ID"] ?>" name="idProduto">
 					<div class="modal-header">
 						<h4 class="modal-title">Inativar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -250,7 +253,12 @@
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-						<input type="submit" class="btn btn-danger" value="Inativar" onclick="enviar();">
+						<input type="submit" class="btn btn-danger" value="Inativar" onclick="enviarInativo();">
+						<script>
+							function enviarInativo() {
+								document.getElementById("formInativar").submit();
+							}
+						</script>
 					</div>
 				</form>
 			</div>
