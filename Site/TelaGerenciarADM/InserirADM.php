@@ -25,6 +25,7 @@
     $stmt->bindValue("ativo", (int) $ativo, PDO::PARAM_INT);
     $stmt->execute();
 
+    /*
     $idADM = $pdo->lastInsertId();
     $comandoInsertEstoque = "INSERT INTO PRODUTO_ESTOQUE (PRODUTO_ID, PRODUTO_QTD) VALUES (:idProduto, :qtd)";
     $pdo->prepare($comandoInsertEstoque)->execute(["idProduto" => $idProduto, "qtd" => $quantidade]);
@@ -33,6 +34,7 @@
 
     include "fechar_transacao.php";
   } else {
+  */
     // Volta pra página com todos os dados.
   }
  
