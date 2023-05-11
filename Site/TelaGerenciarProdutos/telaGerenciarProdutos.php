@@ -43,20 +43,25 @@
 							<th>ID do Produto</th>
 							<th>Nome do Produto</th>
 							<th>Descrição do Produto</th>
+							<th>Quantidade do Produto</th>
 							<th>Preço do Produto</th>
 							<th>Desconto do Produto</th>
 							<th>Categoria ID</th>
 							<th>Produto Ativo</th>
-							<th>Editar/Excluir Produto</th>
+							<th>Editar/Inativar Produto</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 						//Monta o comando de Inserção no Banco
-						$cmd = $pdo->query("SELECT P.PRODUTO_ID,P.PRODUTO_NOME,P.PRODUTO_DESC,P.PRODUTO_DESCONTO,P.PRODUTO_PRECO,P.PRODUTO_ATIVO,C.CATEGORIA_ID,C.CATEGORIA_NOME,C.CATEGORIA_ATIVO
+						$cmd = $pdo->query("SELECT P.PRODUTO_ID,P.PRODUTO_NOME,P.PRODUTO_DESC,PE.PRODUTO_QTD,P.PRODUTO_DESCONTO,P.PRODUTO_PRECO,P.PRODUTO_ATIVO,C.CATEGORIA_ID,C.CATEGORIA_NOME,C.CATEGORIA_ATIVO
 						FROM PRODUTO P 
 						INNER JOIN 
-						CATEGORIA C ON P.CATEGORIA_ID = C.CATEGORIA_ID
+						CATEGORIA C 
+						ON P.CATEGORIA_ID = C.CATEGORIA_ID
+						INNER JOIN
+						PRODUTO_ESTOQUE PE 
+						ON PE.PRODUTO_ID = P.PRODUTO_ID
 						WHERE  PRODUTO_ATIVO=1
 						ORDER BY PRODUTO_ID");
 						?>
@@ -77,6 +82,11 @@
 								<td>
 									<?php
 									echo $linha["PRODUTO_DESC"];
+									?>
+								</td>
+								<td>
+									<?php
+									echo $linha["PRODUTO_QTD"];
 									?>
 								</td>
 								<td>
@@ -104,8 +114,8 @@
 									?>
 								</td>
 								<td>
-									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Inativar">&#xE872;</i></a>
 								</td>
 							<?php
 						}
@@ -113,18 +123,7 @@
 							</tr>
 					</tbody>
 				</table>
-				<div class="clearfix">
-					<div class="hint-text">Mostrando <b>5</b> de <b>25</b> páginas.</div>
-					<ul class="pagination">
-						<li class="page-item disabled"><a href="#">Anterior</a></li>
-						<li class="page-item"><a href="#" class="page-link">1</a></li>
-						<li class="page-item"><a href="#" class="page-link">2</a></li>
-						<li class="page-item active"><a href="#" class="page-link">3</a></li>
-						<li class="page-item"><a href="#" class="page-link">4</a></li>
-						<li class="page-item"><a href="#" class="page-link">5</a></li>
-						<li class="page-item"><a href="#" class="page-link">Próximo</a></li>
-					</ul>
-				</div>
+
 			</div>
 		</div>
 	</div>
@@ -132,7 +131,7 @@
 	<div id="addEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form method="POST" action="InsertProdutos.php">
+				<form method="POST" action="InsertProdutos.php" id="form-inserir">
 					<div class="modal-header">
 						<h4 class="modal-title">Adicionar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -152,17 +151,17 @@
 						</div>
 						<div class="form-group">
 							<label>Desconto do Produto</label>
-							<input type="number" min="1" max="999" class="form-control" name="descontoProduto" required>
+							<input type="number" max="999" class="form-control" name="descontoProduto" required>
 						</div>
 						<div class="form-group">
 							<label for="exampleInputEmail1">Categoria</label>
 							<div class="input-group mb-3">
-								<select class="custom-select" name="categoriaProd" id="inputGroupSelect01">
+								<select class="custom-select" name="categoriaID">
 									<option selected>Escolha...</option>
 									<?php
 									$cmd = $pdo->query("SELECT * FROM CATEGORIA WHERE CATEGORIA_ATIVO=1");
 									while ($linha = $cmd->fetch()) { ?>
-										<option value="<?php echo $linha["CATEGORIA_ID"] ?>" name="categoriaID">
+										<option value="<?php echo $linha["CATEGORIA_ID"] ?>">
 											<?php echo $linha["CATEGORIA_ID"] . " - " . $linha["CATEGORIA_NOME"]; ?>
 										</option>
 									<?php } ?>
@@ -172,10 +171,10 @@
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<div class="input-group-text">
-									<input type="radio" name="produtoAtivo" value=true> Ativo
+									<input type="radio" name="produtoAtivo" value="1" checked> Ativo
 								</div>
 								<div class="input-group-text">
-									<input type="radio" name="produtoInativo" value=false> Não Ativo
+									<input type="radio" name="produtoAtivo" value="0"> Não Ativo
 								</div>
 							</div>
 						</div>
@@ -186,37 +185,12 @@
 						</div>
 						<div class="form-group">
 							<div class="modal-footer">
-								<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-								<input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="botaoEnviar">
-								<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+								<button type="submit" class="btn btn-success" id="botaoEnviar" onclick="enviar();">Enviar</button>
 								<script>
-									$(document).ready(function() {
-										// Seleciona o botão pelo ID
-										var botao = $("#botaoEnviar");
-										// Adiciona um ouvinte de evento de clique ao botão
-										botao.click(function() {
-											// Aqui você pode colocar sua lógica de consulta
-											// Por exemplo, você pode usar uma biblioteca AJAX para enviar uma solicitação ao servidor
-
-											// Exemplo usando AJAX com jQuery
-											$.ajax({
-												url: "InsertProdutos.php",
-												method: "POST",
-												data: {
-													parametro1: valor1,
-													parametro2: valor2
-												}, // Seus parâmetros de consulta
-												success: function(response) {
-													// Manipule a resposta do servidor aqui
-													console.log(response);
-												},
-												error: function(xhr, status, error) {
-													// Manipule os erros aqui
-													console.error(error);
-												}
-											});
-										});
-									});
+									function enviar() {
+										document.getElementById("form-inserir").submit();
+									}
 								</script>
 							</div>
 						</div>
@@ -253,7 +227,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
 						<input type="submit" class="btn btn-info" value="Save">
 					</div>
 				</form>
@@ -264,18 +238,19 @@
 	<div id="deleteEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form method="POST" action="DeleteProdutos.php">
+				<form method="POST" action="InativarProdutos.php">
+					<input type="hidden" value="<?= $linha["ID_PRODUTO"] ?>" name="idProduto">
 					<div class="modal-header">
-						<h4 class="modal-title">Deletar Produto</h4>
+						<h4 class="modal-title">Inativar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">
-						<p>Você tem certeza que quer deletar esse produto?</p>
+						<p>Você tem certeza que quer inativar esse produto?</p>
 						<p class="text-warning"><small>Essa ação não pode ser desfeita.</small></p>
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-						<input type="submit" class="btn btn-danger" value="Deletar">
+						<input type="submit" class="btn btn-danger" value="Inativar" onclick="enviar();">
 					</div>
 				</form>
 			</div>
