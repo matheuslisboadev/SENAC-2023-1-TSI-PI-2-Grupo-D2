@@ -65,7 +65,7 @@
 						WHERE  PRODUTO_ATIVO=1
 						ORDER BY PRODUTO_ID");
 						?>
-						<?php $resultado = $cmd -> fetchAll(); ?>
+						<?php $resultado = $cmd->fetchAll(); ?>
 						<?php
 						foreach ($resultado as $linha) {
 							?>
@@ -87,7 +87,7 @@
 								</td>
 								<td>
 									<?php
-									echo $linha["PRODUTO_QTD"];
+									echo $linha["PRODUTO_QTD"] . " Unidade(s)";
 									?>
 								</td>
 								<td>
@@ -117,10 +117,12 @@
 								<td>
 									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
 											data-toggle="tooltip" title="Editar">&#xE254;</i></a>
-											<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Inativar">&#xE872;</i></a>
+									<a href="#inativarProdutoModal" class="delete inativarProduto"
+										data-produto-id="<?php echo $linha['PRODUTO_ID']; ?>" data-toggle="modal"><i
+											class="material-icons" data-toggle="tooltip" title="Inativar">&#xE872;</i></a>
 								</td>
-								</tr>
-								<?php
+							</tr>
+							<?php
 						}
 						?>
 					</tbody>
@@ -237,12 +239,12 @@
 			</div>
 		</div>
 	</div>
-	<!-- Delete Modal HTML -->
-	<div id="deleteEmployeeModal" class="modal fade">
+	<!-- Inativar Modal HTML -->
+	<div id="inativarProdutoModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<form method="POST" action="InativarProdutos.php" id="formInativar">
-				<input type="hidden" value="<?= $linha["PRODUTO_ID"] ?>" name="idProduto">
+					<input type="hidden" name="idProduto">
 					<div class="modal-header">
 						<h4 class="modal-title">Inativar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -265,5 +267,13 @@
 		</div>
 	</div>
 </body>
+<script>
+	$(document).ready(function () {
+    $(".inativarProduto").click(function () {
+        console.log($(this).data('produto-id'));
+        $('[name="idProduto"]').val($(this).data('produto-id'));
+    });
+});
+</script>
 
 </html>
