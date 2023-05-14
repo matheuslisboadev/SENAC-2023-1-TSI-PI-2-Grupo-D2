@@ -115,7 +115,7 @@
 									?>
 								</td>
 								<td>
-									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
+									<a href="#editarProdutoModal" class="edit editarProduto"   data-produto-id="<?php echo $linha['PRODUTO_ID']; ?>" data-toggle="modal"><i class="material-icons"
 											data-toggle="tooltip" title="Editar">&#xE254;</i></a>
 									<a href="#inativarProdutoModal" class="delete inativarProduto"
 										data-produto-id="<?php echo $linha['PRODUTO_ID']; ?>" data-toggle="modal"><i
@@ -205,10 +205,11 @@
 		</div>
 	</div>
 	<!-- Edit Modal HTML -->
-	<div id="editEmployeeModal" class="modal fade">
+	<div id="editarProdutoModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form method="POST" action="EditProdutos.php">
+				<form method="POST" action="EditarProdutos.php" id ="formEditar">
+					<input type="hidden" name="idProdutoInativar">
 					<div class="modal-header">
 						<h4 class="modal-title">Editar Produto</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -216,24 +217,58 @@
 					<div class="modal-body">
 						<div class="form-group">
 							<label>Nome do Produto</label>
-							<input type="text" class="form-control" id="nomeDoProduto" required>
+							<input type="text" class="form-control" name="nomeDoProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Descrição do Produto</label>
-							<input type="text" class="form-control" id="descDoProduto" required>
-						</div>
-						<div class="form-group">
-							<label>Categoria do Produto</label>
-							<textarea class="form-control" id="categDoProduto" required></textarea>
+							<input type="text" class="form-control" name="descDoProduto" required>
 						</div>
 						<div class="form-group">
 							<label>Quantidade do Produto</label>
-							<input type="number" class="form-control" id="qntDoProduto" required>
+							<input type="number" min ="1" max = "999" class="form-control" name="qntDoProduto" required>
 						</div>
+						<div class="form-group">
+							<label>Preço do Produto</label>
+							<input type="number" max="999" class="form-control" name="precDoProduto" required>
+						<div class="form-group">
+							<label>Desconto do Produto</label>
+							<input type="number" class="form-control" name="dsctDoProduto" required>
+						</div>		
+						<div class="form-group">
+							<label for="exampleInputEmail1">Categoria</label>
+							<div class="input-group mb-3">
+								<select class="custom-select" name="categDoProduto">
+									<option selected>Escolha...</option>
+									<?php
+									$cmd = $pdo->query("SELECT * FROM CATEGORIA WHERE CATEGORIA_ATIVO=1");
+									while ($linhaCategoria = $cmd->fetch()) { ?>
+										<option value="<?php echo $linhaCategoria["CATEGORIA_ID"] ?>">
+											<?php echo $linhaCategoria["CATEGORIA_ID"] . " - " . $linhaCategoria["CATEGORIA_NOME"]; ?>
+										</option>
+									<?php } ?>
+								</select>
+							</div>
+						</div>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="radio" name="produtoEditAtivo" value="1" checked> Ativo
+								</div>
+								<div class="input-group-text">
+									<input type="radio" name="produtoEditAtivo" value="0"> Não Ativo
+								</div>
+							</div>
+						</div>
+
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-						<input type="submit" class="btn btn-info" value="Save">
+						<input type="submit" class="btn btn-info" value="Enviar" onclick="enviarEdicao();">
+						<script>
+							function enviarEdicao() {
+								document.getElementById("formEditar").submit();
+							}
+						</script>
 					</div>
 				</form>
 			</div>
@@ -272,6 +307,14 @@
     $(".inativarProduto").click(function () {
         console.log($(this).data('produto-id'));
         $('[name="idProduto"]').val($(this).data('produto-id'));
+    });
+});
+</script>
+<script>
+	$(document).ready(function () {
+    $(".editarProduto").click(function () {
+        console.log($(this).data('produto-id'));
+        $('[name="idProdutoInativar"]').val($(this).data('produto-id'));
     });
 });
 </script>
