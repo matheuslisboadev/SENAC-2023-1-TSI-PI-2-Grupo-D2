@@ -36,6 +36,10 @@ align-items: center;
 
 
 }
+#cabecalho img{
+	width: 10%;
+	border-radius: 5%;
+}
 
 .pull-right {
     padding-left: 5%;
@@ -44,7 +48,7 @@ align-items: center;
 }
 
 .body {
- background: lightblue ;
+ background-color: lightblue ;
  position: relative;
  margin-top: 50%;
  color: black;
