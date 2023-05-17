@@ -12,6 +12,12 @@
 	border-radius: 5%;
 	
 }
+.header img{
+	width: 10%;
+	border-radius: 5%;
+}
+
+
 .login-form h2 {
 	margin: 0 0 5%;
 	color: #000B0D;
